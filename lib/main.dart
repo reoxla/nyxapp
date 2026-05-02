@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'recording.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
@@ -26,8 +26,45 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final VoiceRecorderService _service = VoiceRecorderService();
+
+  @override
+  void initState() {
+    _service.initPlayer();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: _service.startRecording,
+              child: Text("start Recording"),
+            ),
+            TextButton(
+              onPressed: _service.stopRecording,
+              child: Text("stop recording"),
+            ),
+            TextButton(
+              onPressed: _service.playRecording,
+              child: Text("play recording"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // You call your custom method here
+    _service.cleanUp();
+
+    // Then you call the REQUIRED super.dispose() for the State
+    super.dispose();
   }
 }
